@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-select site in www/*/; do
+select site in /var/www/*/; do
     if [[ $REPLY == "0" ]]; then
         echo 'Bye!' >&2
         exit
@@ -26,5 +26,5 @@ php artisan db:wipe
 php artisan db:import
 php artisan db:reset
 
-chown www-data www/${site}/storage -R
-chmod a+w -R www/${site}/storage
+# chown www-data ${site}storage -R
+chmod a+w -R ${site}storage
