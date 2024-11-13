@@ -53,7 +53,7 @@ cp ../www/${folder}/.env.example www/${folder}/.env
 
 #nigthly cron
 line="0 0 * * * php /var/www/${folder}/artisan schedule:run"
-crontab -u www-data -l; echo "$line"
+(crontab -u www-data -l; echo "$line" ) | crontab -u www-data -
 
 
 echo "
