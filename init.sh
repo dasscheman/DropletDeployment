@@ -1,4 +1,28 @@
 #!/bin/bash
+echo "
+Run the following commands for a complete new droplet:
+  curl -sL https://github.com/thedevdojo/larasail/archive/master.tar.gz | tar xz && source larasail-master/install
+  larasail su
+  larasail setup"
+
+
+# Function to display the confirmation prompt
+function confirm() {
+  while true; do
+    read -p "Heb je bovenstaande commando's al eens gerund? (YES/NO/CANCEL) " yn
+    case $yn in
+        [Yy]* ) return 0;;
+        [Nn]* ) return 1;;
+        [Cc]* ) exit;;
+        * ) echo "Please answer YES, NO, or CANCEL.";;
+    esac
+  done
+}
+
+if ! confirm; then
+  echo "User chose NO. Aborting the operation..."
+  exit
+fi
 
 repos=("https://github.com/dasscheman/OV-Montessori.git" "https://github.com/dasscheman/BisonBar.git")
 
@@ -24,68 +48,21 @@ folder=${url//./$underscore}
 
 echo "Folder: " $folder
 
-git clone $repo www/${folder}
-cp www/${folder}/.env.example www/${folder}/.env
+git clone $repo ../www/${folder}
+cp ../www/${folder}/.env.example www/${folder}/.env
 
 #nigthly cron
-line="0 0 * * * php www/${folder}/artisan schedule:run"
+line="0 0 * * * php /var/www/${folder}/artisan schedule:run"
 crontab -u www-data -l; echo "$line"
 
-echo "
-Run the following commands for a complete new droplet:
-  curl -sL https://github.com/thedevdojo/larasail/archive/master.tar.gz | tar xz && source larasail-master/install
-  larasail su
-  larasail setup"
 
 echo "
+Add a dns record in stato for: ${url}:
+
 Run the following command to install new site while in folder: ${folder}:
-  larasail host ${url} /var/www/${folder}"
 
+  larasail host ${url} /var/www/${folder}"
 
 exit
 
-git clone https://github.com/dasscheman/BisonBar.git bisonbar_biologenkantoor_nl
-
-curl -sL https://github.com/thedevdojo/larasail/archive/master.tar.gz | tar xz && source larasail-master/install
-
-larasail su
-larasail setup
-
-
-larasail host test.montessorizeist.nl /var/www/test_montessorizeist_nl  #--www-alias
-larasail host bisonbar.biologenkantoor.nl /var/www/bisonbar_biologenkantoor_nl #--www-alias
-
-## Montessori
-cd /var/www/test_montessorizeist_nl
-cp .env.example .env
-larasail database init --user test_montessorizeist_nl --db test_montessorizeist_nl --force
-
-composer install
-npm install
-npm run dev
-php artisan key:generate
-php artisan db:wipe
-php artisan migrate
-
-chown www-data /var/www/test_montessorizeist_nl/storage -R
-chmod a+w -R /var/www/test_montessorizeist_nl/storage
-
-0 0 * * * php /home/forge/ovsumatralaan.montessorizeist.nl/artisan payments:sendoverview
-
-## BisonBar
-cd /var/www/bisonbar_biologenkantoor_nl
-cp .env.example .env
-larasail database init --user bisonbar_biologenkantoor_nl --db bisonbar_biologenkantoor_nl --force
-
-composer install
-npm install
-npm run build
-php artisan key:generate
-php artisan db:wipe
-php artisan db:import
-php artisan db:reset
-
-chown www-data /var/www/bisonbar_biologenkantoor_nl/storage -R
-chmod a+w -R /var/www/bisonbar_biologenkantoor_nl/storage
-
-SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+#SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
