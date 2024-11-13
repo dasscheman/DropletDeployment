@@ -55,13 +55,17 @@ cp ../www/${folder}/.env.example www/${folder}/.env
 line="0 0 * * * php /var/www/${folder}/artisan schedule:run"
 (crontab -u www-data -l; echo "$line" ) | crontab -u www-data -
 
+echo "Volgende cron is gezet:"
+crontab -u www-data -l
+
+externalip="curl https://ipinfo.io/ip"
 
 echo "
-Add a dns record in stato for: ${url}:
+Add a dns record in stato for: ${externalip} and ${url}:
 
 Run the following command to install new site while in folder: ${folder}:
-
-  larasail host ${url} /var/www/${folder}"
+  larasail host ${url} /var/www/${folder}
+  larasail database init --user ${folder} --db ${folder} --force"
 
 exit
 
