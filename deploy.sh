@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[ "$(whoami)" = "larasail" ] || echo 'Please run this script as user larasail' || exit
+
 select site in /var/www/*/; do
     if [[ $REPLY == "0" ]]; then
         echo 'Bye!' >&2
@@ -27,6 +29,6 @@ npm install
 npm run build
 php artisan migrate
 
-chown www-data /var/${site}storage -R
-chmod a+w -R /var/${site}storage
+chown www-data ${site}storage -R
+chmod a+w -R ${site}storage
 
