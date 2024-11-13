@@ -1,6 +1,6 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-select site in www/*/; do
+select site in /var/www/*/; do
     if [[ $REPLY == "0" ]]; then
         echo 'Bye!' >&2
         exit
@@ -27,6 +27,6 @@ npm install
 npm run build
 php artisan migrate
 
-chown www-data www/${site}/storage -R
-chmod a+w -R www/${site}/storage
+chown www-data /var/${site}storage -R
+chmod a+w -R /var/${site}storage
 

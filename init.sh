@@ -1,4 +1,5 @@
 #!/bin/bash
+
 echo "
 Run the following commands for a complete new droplet:
   curl -sL https://github.com/thedevdojo/larasail/archive/master.tar.gz | tar xz && source larasail-master/install
@@ -48,8 +49,8 @@ folder=${url//./$underscore}
 
 echo "Folder: " $folder
 
-git clone $repo ../www/${folder}
-cp ../www/${folder}/.env.example www/${folder}/.env
+git clone $repo /var/www/${folder}
+cp /var/www/${folder}/.env.example www/${folder}/.env
 
 #nigthly cron
 line="0 0 * * * php /var/www/${folder}/artisan schedule:run"
@@ -58,13 +59,15 @@ line="0 0 * * * php /var/www/${folder}/artisan schedule:run"
 echo "Volgende cron is gezet:"
 crontab -u www-data -l
 
+chown larasail:larasail /var/www/"${folder}" -R
+
 externalip=$(curl https://ipinfo.io/ip)
 
 echo "
 Add a dns record in stato for: ${externalip} and ${url}:
 
 Run the following command to install new site while in folder: ${folder}:
-  larasail host ${url} /var/www/${folder} --www-alias
+  larasail host ${url} /var/www/${folder}
   larasail database init --user ${folder} --db ${folder} --force"
 
 exit
