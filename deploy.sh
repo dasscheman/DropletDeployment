@@ -1,6 +1,11 @@
 #!/bin/bash
 
-[ "$(whoami)" = "larasail" ] || echo 'Please run this script as user larasail' || exit
+fatal() {
+  echo "FATAL: $1" >&2
+  exit 1
+}
+
+[ "$(whoami)" = "larasail" ] || fatal 'Please run this script as user larasail'
 
 select site in /var/www/*/; do
     if [[ $REPLY == "0" ]]; then
@@ -29,6 +34,6 @@ npm install
 npm run build
 php artisan migrate
 
-chown www-data ${site}storage -R
+# chown www-data ${site}storage -R
 chmod a+w -R ${site}storage
 

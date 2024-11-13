@@ -50,7 +50,7 @@ folder=${url//./$underscore}
 echo "Folder: " $folder
 
 git clone $repo /var/www/${folder}
-cp /var/www/${folder}/.env.example www/${folder}/.env
+cp /var/www/${folder}/.env.example /var/www/${folder}/.env
 
 #nigthly cron
 line="0 0 * * * php /var/www/${folder}/artisan schedule:run"
