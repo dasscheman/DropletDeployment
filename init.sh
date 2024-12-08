@@ -71,6 +71,7 @@ cd /var/www/"${folder}" || exit
 echo -e "Run the following command to install new site while in folder: ${folder}:
   ${RED}larasail host ${url} /var/www/${folder}${NC}
   ${RED}larasail database init --user ${folder} --db ${folder} --force${NC}
+  Check de .env file and run:
   ${RED}./deploy.sh${NC}"
 exit
 
