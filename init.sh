@@ -1,13 +1,19 @@
 #!/bin/bash
 RED='\033[0;31m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
+externalip=$(curl https://ipinfo.io/ip)
 
-echo "
+read -p "Geef de url ($repo): " url
+echo "Url: " "$url"
+
+echo -e "
 Run the following commands for a complete new droplet:
-  curl -sL https://github.com/thedevdojo/larasail/archive/master.tar.gz | tar xz && source larasail-master/install
-  larasail setup"
-
+  ${CYAN}curl -sL https://github.com/thedevdojo/larasail/archive/master.tar.gz | tar xz && source larasail-master/install${NC}
+  ${PURPLE}larasail setup${NC}
+  ${RED}Dit you add a dns record in stato for: ${externalip} and ${url}${NC}"
 
 # Function to display the confirmation prompt
 function confirm() {
@@ -43,9 +49,7 @@ select repo in "${repos[@]}"; do
 done
 
 echo $repo
-read -p "Geef de url ($repo): " url
 
-echo "Url: " "$url"
 underscore="_"
 folder=${url//./$underscore}
 
@@ -56,22 +60,18 @@ cp /var/www/${folder}/.env.example /var/www/${folder}/.env
 
 #nigthly cron
 line="0 0 * * * php /var/www/${folder}/artisan schedule:run"
-(crontab -u www-data -l; echo "$line" ) | crontab -u www-data -
+(sudo crontab -u www-data -l; echo "$line" ) | sudo crontab -u www-data -
 
 echo "Volgende cron is gezet:"
-crontab -u www-data -l
+sudo crontab -u www-data -l
 
-chown larasail:larasail /var/www/"${folder}" -R
+sudo chown larasail:larasail /var/www/"${folder}" -R
 
-externalip=$(curl https://ipinfo.io/ip)
-
-echo "
-${RED}Add a dns record in stato for: ${externalip} and ${url}${NC}
-
-Run the following command to install new site while in folder: ${folder}:
+cd /var/www/"${folder}" || exit
+echo -e "Run the following command to install new site while in folder: ${folder}:
   ${RED}larasail host ${url} /var/www/${folder}${NC}
-  ${RED}larasail database init --user ${folder} --db ${folder} --force${NC}"
-
+  ${RED}larasail database init --user ${folder} --db ${folder} --force${NC}
+  ${RED}./deploy.sh${NC}"
 exit
 
 #SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));

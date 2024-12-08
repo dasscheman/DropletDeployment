@@ -18,6 +18,8 @@ select site in /var/www/*/; do
 done
 
 cd $site || exit
+composer install
+php artisan key:generate
 
 php artisan backup:run
 
@@ -35,6 +37,5 @@ npm install
 npm run build
 php artisan migrate
 
-# chown www-data ${site}storage -R
 chmod a+w -R ${site}storage
 
