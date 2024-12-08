@@ -1,9 +1,11 @@
 #!/bin/bash
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
 
 echo "
 Run the following commands for a complete new droplet:
   curl -sL https://github.com/thedevdojo/larasail/archive/master.tar.gz | tar xz && source larasail-master/install
-  larasail su
   larasail setup"
 
 
@@ -64,11 +66,11 @@ chown larasail:larasail /var/www/"${folder}" -R
 externalip=$(curl https://ipinfo.io/ip)
 
 echo "
-Add a dns record in stato for: ${externalip} and ${url}:
+${RED}Add a dns record in stato for: ${externalip} and ${url}${NC}
 
 Run the following command to install new site while in folder: ${folder}:
-  larasail host ${url} /var/www/${folder}
-  larasail database init --user ${folder} --db ${folder} --force"
+  ${RED}larasail host ${url} /var/www/${folder}${NC}
+  ${RED}larasail database init --user ${folder} --db ${folder} --force${NC}"
 
 exit
 
