@@ -25,9 +25,10 @@ default_branch="main"
 read -p "Welke branch moet er uitgerold worden? (default $default_branch): " branch
 branch="${branch:-$default_branch}"
 
-echo $branch
+echo "${branch}"
 
-git checkout $branch
+git checkout "${branch}"
+git pull
 
 composer install
 npm install

@@ -34,8 +34,8 @@ select repo in "${repos[@]}"; do
     if [[ $REPLY == "0" ]]; then
         echo 'Bye!' >&2
         exit
-    elif [[ ! -z $repo ]]; then
-	break
+    elif [[ -n $repo ]]; then
+	      break
     fi
     echo 'Invalid choice, try again' >&2
 done
@@ -43,7 +43,7 @@ done
 echo $repo
 read -p "Geef de url ($repo): " url
 
-echo "Url: " $url
+echo "Url: " "$url"
 underscore="_"
 folder=${url//./$underscore}
 
