@@ -21,7 +21,7 @@ cd $site || exit
 # Install/update composer dependecies
 composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
-php artisan deploy:check
+php artisan down
 php artisan key:generate
 php artisan backup:run
 
@@ -53,13 +53,13 @@ php artisan config:cache
 php artisan view:cache
 
 composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
-npm install
 # Install node modules
 npm install
 
 # Build assets using Laravel Mix
-npm run production
+npm run prod
 
+echo "Set permissions on ${site}storage"
 chmod a+w -R ${site}storage
 
 # Turn off maintenance mode
