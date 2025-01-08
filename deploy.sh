@@ -61,6 +61,7 @@ npm run prod
 
 echo "Set permissions on ${site}storage"
 chmod a+w -R ${site}storage
+sudo chown larasail:www-data -R  ${site}storage
 
 # Turn off maintenance mode
 php artisan up
