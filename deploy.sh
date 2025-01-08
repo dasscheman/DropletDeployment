@@ -32,7 +32,9 @@ branch="${branch:-$default_branch}"
 echo "${branch}"
 
 git checkout "${branch}"
-git pull
+
+git fetch --all
+git reset --hard origin/"${branch}"
 
 # Run database migrations
 php artisan migrate --force
