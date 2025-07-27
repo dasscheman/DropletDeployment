@@ -62,8 +62,17 @@ npm install
 npm run prod
 
 echo "Set permissions on ${site}storage"
-chmod a+w -R ${site}storage
 sudo chown larasail:www-data -R  ${site}storage
+sudo chown larasail:www-data -R  ${site}bootstrap/cache
+chmod 775 -R ${site}storage
+chmod 775 -R ${site}bootstrap/cache
+
+#Calling the following 4 commands should fix most of the permission issues on laravel.
+#
+#sudo chown -R $USER:www-data storage
+#sudo chown -R $USER:www-data bootstrap/cache
+#chmod -R 775 storage
+#chmod -R 775 bootstrap/cache
 
 # Turn off maintenance mode
 php artisan up
