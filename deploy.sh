@@ -19,7 +19,7 @@ done
 
 cd $site || exit
 # Install/update composer dependecies
-composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+composer install --no-interaction --prefer-dist --optimize-autoloader
 
 php artisan down
 php artisan key:generate
@@ -54,18 +54,20 @@ php artisan config:cache
 # Clear and cache views
 php artisan view:cache
 
-composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 # Install node modules
 npm install
 
 # Build assets using Laravel Mix
-npm run prod
+npm run build
 
 echo "Set permissions on ${site}storage"
 sudo chown larasail:www-data -R  ${site}storage
 sudo chown larasail:www-data -R  ${site}bootstrap/cache
 chmod 775 -R ${site}storage
 chmod 775 -R ${site}bootstrap/cache
+
+npm install --omit=dev
+composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
 #Calling the following 4 commands should fix most of the permission issues on laravel.
 #
